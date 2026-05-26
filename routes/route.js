@@ -4,7 +4,7 @@ const controller = require("./controller");
 
 router.get("/reg", controller.html);
 
-router.get("/users", controller.getUsers);
+// router.post("/api/confirm", controller.confirm);
 
 router.post("/api/reg", controller.postUsers);
 

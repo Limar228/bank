@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Подтверждение регистрации</title>
+    <link rel="stylesheet" href="/styles/confirm_style.css" />
+  </head>
+  <body>
+    <div class="form-card" id="card-content">
+      <h2>Подтверждение почты</h2>
+      <p>
+        Мы отправили 6-значный код подтверждения на ваш Email. Пожалуйста,
+        проверьте папку "Входящие" или "Спам".
+      </p>
+
+      <form id="confirm-form">
+        <div class="input-group">
+          <label for="confirm-code">Введите код</label>
+          <input
+            type="text"
+            id="confirm-code"
+            required
+            maxlength="6"
+            pattern="\d{6}"
+          />
+        </div>
+        <button type="submit">Подтвердить аккаунт</button>
+      </form>
+    </div>
+
+    <script>
+      const confirmForm = document.getElementById("confirm-form");
+      confirmForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const userCode = document.getElementById("confirm-code").value;
+
+        try {
+          const response = await fetch("/api/confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userCode }),
+          });
+        } catch (err) {
+          console.error("Ошибка при подтверждении кода:", err);
+        }
+      });
+    </script>
+  </body>
+</html>
