@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
-const HOST = "localhost";
+const HOST = "127.0.0.1";
 
 const app = express();
 app.use(express.json());
