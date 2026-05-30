@@ -9,7 +9,7 @@ class Route {
     console.log(data);
 
     try {
-      await serviceVerification({ userEmail: data.email }); //Дэф функция теперь при эксп, ожид обьект
+      await serviceVerification.sendVerificationCode(data.email); // НУЖНО ПРОВЕРЯТЬ КОД
       await serviceUsers.writeUsersFs(data);
       res.sendFile(path.join(__dirname, "..", "public", "confirm.html"));
     } catch (error) {
