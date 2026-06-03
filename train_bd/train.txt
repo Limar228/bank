@@ -18,6 +18,8 @@ CREATE TABLE, ALTER TABLE, DROP TABLE.
 Уровень 2: Манипуляция данными (DML) и выборки (SELECT)
 Здесь ты будешь проводить 90% времени.
 
+ORDER BY, WHERE
+
 Базовые операции: INSERT, UPDATE, DELETE.
 
 SELECT:
