@@ -1,0 +1,57 @@
+order_id, user_id, category, amount
+1,          101,    Tech,    1200
+2,          102,    Apparel,  50
+3,          101,    Tech,     300
+4,          103,    Media,    15
+5,          102,    Apparel,  80
+
+
+
+////////GROUP BY:
+Для объедения одинаковых строка
+Если ты используешь GROUP BY, то в секции SELECT могут находиться только те столбцы,
+по которым идет группировка, и агрегатные функции (SUM, COUNT, AVG, MAX, MIN).
+Обычную колонку (например, order_id) туда засунуть нельзя
+
+SELECT category, SUM(amount) AS total_sales
+FROM orders
+GROUP BY category;
+
+category	total_sales
+Tech	     1500
+Apparel	     130
+Media	     15
+
+
+////////HAVING:
+Зачем нужен: Это тот же WHERE, но созданный специально для фильтрации результатов после группировки.
+WHERE отсекает строки до того, как они объединятся в группы. Он ничего не знает про SUM или COUNT.
+HAVING отсекает данные после группировки, работая с результатами агрегатных функций.
+
+SELECT category, SUM(amount) AS total_sales
+FROM orders
+GROUP BY category
+HAVING SUM(amount) > 100;
+
+Результат:
+category,  total_sales
+Tech,       1500
+Apparel,    130
+
+(Категория Media отсеялась, так как её сумма 15 меньше 100),
+
+
+///////ORDER BY
+Зачем нужен: Чтобы упорядочить финальный вывод по возрастанию (ASC, стоит по умолчанию) или по убыванию (DESC).
+
+Запрос: Вывести категории с продажами > 100, отсортировав их от самых прибыльных к менее прибыльным
+
+SELECT category, SUM(amount) AS total_sales
+FROM orders
+GROUP BY category
+HAVING SUM(amount) > 100
+ORDER BY total_sales DESC;
+
+category,   total_sales
+Tech,         1500
+Apparel,      130
