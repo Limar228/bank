@@ -23,6 +23,7 @@ class Verification {
       const info = await transporter.sendMail(mailOptions);
 
       console.log("Письмо с кодом успешно отправлено на " + params);
+      console.log("info", info);
 
       ///code проверять
     } catch (error) {
