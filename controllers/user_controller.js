@@ -9,6 +9,9 @@ const authController = {
     console.log(data);
 
     try {
+      if (data.password !== data.password) {
+        return res.status(401).json({ error: "Неверный логин или пароль" });
+      }
       const ret = await serviceVerification.sendVerificationCode(data.email); // НУЖНО ПРОВЕРЯТЬ КОД
       // if (ret) {
 
@@ -16,7 +19,7 @@ const authController = {
       //   console.log("controller", ret);
       //   throw new Error();
       // }  ПРИ ВВОДЕ НЕПРАВИЛЬНОЙ ИЛИ ПРАВИЛЬНОЙ ПОЧТЫ ret always undefined
-      // await serviceUsers.writeUsersFs(data);
+      await serviceUsers.writeUsersFs(data);
       return res
         .status(201)
         .json({ success: true, message: "User registered" });

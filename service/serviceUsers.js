@@ -1,6 +1,7 @@
-const fs = require("fs/promises");
+const fs = require("fs").promises;
+const userRepository = require("../repositories/user.repository");
 
-class Users {
+const users = {
   async getUsersFs() {
     try {
       const data = await fs.readFile("users.json", "utf-8");
@@ -8,20 +9,14 @@ class Users {
     } catch {
       throw new Error("Ошибка при регистрации");
     }
-  }
+  },
 
   async writeUsersFs(param) {
     try {
-      const getUser = await this.getUsersFs();
-      getUser.push(param);
-      await fs.writeFile(
-        "users.json",
-        JSON.stringify(getUser, null, 2),
-        "utf-8",
-      );
-    } catch {
-      throw new Error("Ошибка при регистрации");
+      await userRepository.create(param);
+    } catch (error) {
+      console.error(error);
     }
-  }
-}
-module.exports = new Users();
+  },
+};
+module.exports = users;
