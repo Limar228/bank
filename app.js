@@ -1,8 +1,6 @@
 const express = require("express");
-const confirm_routes = require("./routes/confirm_routes");
+const reg_routes = require("./routes/reg_routes");
 const html_routes = require("./routes/html_routes");
-const user_routes = require("./routes/user_routes");
-
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
@@ -13,9 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api", user_routes);
 app.use("/", html_routes);
-app.use("/auth", confirm_routes);
+app.use("/auth", reg_routes);
 
 app.use(express.static("public"));
 
