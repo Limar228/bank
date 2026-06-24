@@ -7,7 +7,7 @@ const authController = {
     const data = req.body;
     console.log(data);
     try {
-      if (data.password !== data.password) {
+      if (data.password !== data.password1) {
         return res.status(401).json({ error: "Неверный логин или пароль" });
       }
       await serviceUsers.writeUsers(data);
@@ -22,7 +22,7 @@ const authController = {
         .status(200)
         .json({ success: true, message: "Код успешно отправлен на почту" });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ message: error.message });
     }
   },
 
@@ -34,17 +34,15 @@ const authController = {
         return res.status(400).json({ message: "Email и код обязательны" });
       }
 
-      const result = await serviceConfirm.confirm(code, email); // Должен вернуть ок
+      const result = await serviceConfirm.confirm(code, email);
       if (result.success) {
-        res
-          .status(201)
-          .json({ success: true, message: "Вы зарегистрированны" });
+        return res.status(201).json({ message: "Вы зарегистрированны" });
       } else {
-        res.status(500).json({ message: "Ошибка при регистрации" });
+        return res.status(400).json({ message: result.message });
       }
     } catch (error) {
       console.error("КРИТИЧЕСКАЯ ОШИБКА В КОНТРОЛЛЕРЕ:", error);
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ message: error.message });
     }
   },
 };

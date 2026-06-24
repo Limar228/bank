@@ -1,25 +1,21 @@
-const codeRepository = require("../repositories/GETcode.repository");
+const codeRepository = require("../repositories/AUTHcode.repository");
 
 const confirm = {
   async confirm(code, email) {
-    try {
-      const data = await codeRepository.getCode(email);
-      //при проверке хэшировать входящий userCode и сравнивать хэши
-      //проверка на время еще код
-      console.log(data.verification_code, code.userCode);
+    const data = await codeRepository.getCode(email);
+    //при проверке хэшировать входящий userCode и сравнивать хэши
 
-      if (data.verification_code !== code.userCode) {
-        return { success: false, message: "Неверный код" };
-      }
-      // Активируем пользователя / Переносим из временной таблицы в основную
-      // await codeRepository.DELETECode(email);
-
-      return { success: true };
-    } catch (error) {
-      console.log("ОШИБКА", error);
-
-      return { success: false };
+    if (data.verification_code_expires.getTime() < Date.now()) {
+      return { success: false, message: "Код доступа истек" };
     }
+
+    if (data.verification_code !== code.userCode) {
+      return { success: false, message: "Неверный код" };
+    }
+    const user = await codeRepository.transactionUsers(email);
+    console.log("ПОЛЬЗОВАТЕЛЬ", user);
+
+    return { success: true };
   },
 };
 

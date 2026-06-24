@@ -3,9 +3,8 @@ const pool = require("../config/pull");
 const userRepository = {
   async create(param, verificationCode) {
     const query = `
-      INSERT INTO users (username, email, password, verification_code, verification_code_expires)
-      VALUES ($1, $2, $3, $4, NOW() + INTERVAL '15 minutes') 
-      RETURNING id_user, username, email;
+      INSERT INTO temp_users (username, email, password, verification_code, verification_code_expires)
+      VALUES ($1, $2, $3, $4, NOW() + INTERVAL '5 min');
     `;
 
     const result = await pool.query(query, [
@@ -14,8 +13,6 @@ const userRepository = {
       param.password,
       verificationCode,
     ]);
-
-    return result.rows[0]; // ДЛЯ СЛЕД ДЕЙСТВИЙ С ЭТИМ ПОЛЬЗОВАТЕЛЕМ СЕССИИ ИЛИ JWT токен
   },
 };
 
