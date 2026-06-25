@@ -1,7 +1,6 @@
 --chcp 65001
 -- SET client_encoding = 'UTF8';
 --\encoding UTF8
---В cmd не PH ОТЛИЧИЯ
 
 --Оператор,   Что делает,                          Дубликаты по умолчанию,      Скорость
 --UNION,      Объединяет всё и удаляет повторы,       Удаляет,                 Медленнее (нужна сортировка)
@@ -21,4 +20,4 @@ FROM customers
 LEFT JOIN orders ON customers.customer_id = orders.customer_id
 LEFT JOIN products ON orders.product_id = products.product_id
 GROUP BY first_name, last_name
-HAVING 
+HAVING first_name LIKE '%а%'
