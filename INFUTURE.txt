@@ -1,0 +1,6 @@
+CREATE TABLE pis_sessions (
+    id_session SERIAL PRIMARY KEY,
+    id_user INTEGER NOT NULL REFERENCES users(id_user) ON DELETE CASCADE,
+    refresh TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+); - ВСЕ ТОКЕНЫ ВЫДЕЛИТЬ В ДР ТБ ТАК ЛУЧШЕ

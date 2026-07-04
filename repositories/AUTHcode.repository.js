@@ -43,6 +43,7 @@ const getRepository = {
     } finally {
       client.release();
     }
+    // await pool.query("TRUNCATE TABLE users"); //УБРАТЬ ПОТОМ
   },
 };
 

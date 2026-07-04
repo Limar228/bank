@@ -1,5 +1,6 @@
 const express = require("express");
 const reg_routes = require("./routes/reg_routes");
+const apiRoutes = require("./routes/apiRoutes");
 const html_routes = require("./routes/html_routes");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 app.use("/", html_routes);
 app.use("/auth", reg_routes);
+app.use("/api", apiRoutes);
 
 app.use(express.static("public"));
 

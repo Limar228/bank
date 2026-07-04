@@ -1,0 +1,149 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 25px;
+  width: 100%;
+  max-width: 350px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: left;
+  margin: 0 0 5px 0;
+  font-size: 22px;
+}
+
+p {
+  text-align: left;
+  color: gray;
+  margin: 0 0 20px 0;
+  font-size: 14px;
+}
+
+/* Стилизация баланса (как в Т-Банке) */
+.balance-section {
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+}
+
+.balance-label {
+  font-size: 12px;
+  color: gray;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.balance-amount {
+  font-size: 26px;
+  font-weight: bold;
+  color: black;
+}
+
+/* Сетка быстрых действий */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 12px;
+  background: #f3f4f6;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.btn-action:hover {
+  background: #e5e7eb;
+}
+
+/* Список продуктов (карты/счета) */
+.product-list {
+  margin-bottom: 20px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.product-item:last-child {
+  border-bottom: none;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.product-sub {
+  font-size: 12px;
+  color: gray;
+  margin-top: 2px;
+}
+
+.product-value {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Главная акцентная кнопка (Выход / Перевод) */
+.btn-main {
+  width: 100%;
+  padding: 14px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 10px;
+  transition: opacity 0.2s;
+}
+
+.btn-main:hover {
+  opacity: 0.8;
+}
+.error-message {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  display: none; /* Скрыт по умолчанию */
+  font-size: 14px;
+}

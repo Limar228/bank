@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Главная — NEXT BANK</title>
+    <link rel="stylesheet" href="/styles/dashboard_styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="error-block" class="error-message"></div>
+
+      <h1 id="user-greeting">Загрузка...</h1>
+      <p>Рады вас видеть</p>
+
+      <div class="balance-section">
+        <div class="balance-label">Всего на счетах</div>
+        <div class="balance-amount" id="total-balance">0,00 ₽</div>
+      </div>
+
+      <div class="actions-grid">
+        <button class="btn-action" onclick="alert('Кнопка: Пополнить')">
+          Пополнить
+        </button>
+        <button class="btn-action" onclick="alert('Кнопка: Платежи')">
+          Платежи
+        </button>
+      </div>
+
+      <div class="product-list" id="accounts-container"></div>
+
+      <button class="btn-main" id="logout-btn">Выйти</button>
+    </div>
+
+    <script>
+      function showError(message) {
+        const errorBlock = document.getElementById("error-block");
+        if (errorBlock) {
+          errorBlock.textContent = message;
+          errorBlock.style.display = "block";
+        }
+      }
+
+      function hideError() {
+        const errorBlock = document.getElementById("error-block");
+        if (errorBlock) errorBlock.style.display = "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        hideError();
+
+        try {
+          const response = await fetch("/api/user/dashboard", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+
+          if (response.status === 401) {
+            const refreshResponse = await fetch("/api/refresh", {
+              method: "POST",
+            });
+            if (refreshResponse.ok) {
+              window.location.href = "/dashboard";
+            } else {
+              window.location.href = "/login?error=session_expired";
+              const data = await refreshResponse.json();
+            }
+          }
+
+          const data = await response.json().catch(() => null);
+
+          if (!response.ok || (data && data.success === false)) {
+            const errorMsg =
+              data?.message || `Ошибка сервера (Статус: ${response.status})`;
+            showError(errorMsg);
+            return;
+          }
+          renderDashboard(data.users);
+        } catch (error) {
+          console.error("Ошибка:", error);
+          showError(
+            "Не удалось связаться с сервером. Проверьте интернет-соединение.",
+          );
+        }
+      });
+
+      function renderDashboard(userData) {
+        const currency = userData.currency || "";
+        const balance = userData.balance !== undefined ? userData.balance : "";
+
+        document.getElementById("user-greeting").textContent =
+          `Привет, ${userData.username || "Пользователь"}!`;
+        document.getElementById("total-balance").textContent =
+          `${Math.round(balance)} ${currency}`;
+      }
+
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", async () => {
+          try {
+            const logoutResponse = await fetch("/api/loggout", {
+              method: "POST",
+            });
+            const data = await logoutResponse.json().catch(() => ({}));
+
+            if (logoutResponse.ok || data.success) {
+              window.location.href = "/login";
+            }
+          } catch (err) {
+            showError("Ошибка сети при попытке выхода.");
+          }
+        });
+    </script>
+  </body>
+</html>

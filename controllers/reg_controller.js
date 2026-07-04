@@ -12,15 +12,16 @@ const authController = {
       }
       await serviceUsers.writeUsers(data);
       res.cookie("registration_email", req.body.email, {
-        httpOnly: true, // Защита от кражи скриптами
-        secure: true, // Только по HTTPS в продакшене
+        httpOnly: true,
+        secure: true,
         sameSite: "strict",
-        maxAge: 5 * 60 * 1000, // 5 минут жизни
-      }); //ПОДРОБНЕЕ
+        maxAge: 5 * 60 * 1000,
+      });
 
-      return res
-        .status(200)
-        .json({ success: true, message: "Код успешно отправлен на почту" });
+      res.status(200).json({
+        success: true,
+        message: "Подтвердите код",
+      });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -36,7 +37,10 @@ const authController = {
 
       const result = await serviceConfirm.confirm(code, email);
       if (result.success) {
-        return res.status(201).json({ message: "Вы зарегистрированны" });
+        return res.status(200).json({
+          success: true,
+          message: "Вы успешно зарегистрировались",
+        });
       } else {
         return res.status(400).json({ message: result.message });
       }

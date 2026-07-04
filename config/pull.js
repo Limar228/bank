@@ -16,17 +16,19 @@ let tunnelCounter = 0;
 pool.on("connect", (client) => {
   tunnelCounter++;
   client.tunnelId = tunnelCounter;
-  console.log(`[Пул] Создан и физически открыт туннель №${client.tunnelId}`);
+  console.log(`[Пул] Создан туннель №${client.tunnelId}`);
 });
 
 pool.on("acquire", (client) => {
-  console.log(
-    `[Пул] Туннель №${client.tunnelId} забран из пула под SQL-запрос`,
-  );
+  console.log(`[Пул] Туннель №${client.tunnelId} забран из пула запрос`);
 });
 
+pool.on("release", (err, client) => {
+  if (client && client.tunnelId) {
+    console.log(`[Пул] Туннель №${client.tunnelId} вернулся в пул`);
+  }
+});
 pool.on("error", (err) => {
   console.error("Непредвиденная ошибка пула БД:", err);
 });
-
 module.exports = pool;

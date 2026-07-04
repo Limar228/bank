@@ -3,22 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Регистрация</title>
+    <title>Авторизация</title>
 
-    <link rel="stylesheet" href="/styles/reg_style.css" />
+    <link rel="stylesheet" href="/styles/login_styles.css" />
   </head>
 
   <body>
     <div class="container">
-      <h1>Регистрация</h1>
-      <p>Создайте аккаунт</p>
+      <h1>Авторизация</h1>
 
-      <form id="regForm">
-        <div class="form-group">
-          <label>Имя</label>
-          <input name="name" type="text" placeholder="Введите имя" />
-        </div>
+      <div id="error-message" class="error-alert"></div>
 
+      <form id="authForm">
         <div class="form-group">
           <label>Email</label>
           <input name="email" type="email" placeholder="example@mail.com" />
@@ -29,45 +25,46 @@
           <input name="password" type="password" placeholder="Введите пароль" />
         </div>
 
-        <div class="form-group">
-          <label>Повторите пароль</label>
-          <input
-            name="password1"
-            type="password"
-            placeholder="Повторите пароль"
-          />
-        </div>
-
-        <button type="submit">Зарегистрироваться</button>
+        <button type="submit" class="btn-submit">Войти</button>
       </form>
     </div>
     <script>
-      const form = document.getElementById("regForm");
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorType = urlParams.get("error");
+
+        const errorBox = document.getElementById("error-message");
+
+        if (errorType) {
+          errorBox.style.display = "block";
+
+          if (errorType === "session_expired") {
+            errorBox.textContent = "Ваша сессия истекла";
+          } else {
+            errorBox.textContent = "Ошибка авторизации. Попробуйте еще раз.";
+          }
+        }
+      });
+
+      const form = document.getElementById("authForm");
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const data = {
-          username: form.name.value,
           email: form.email.value,
           password: form.password.value,
-          password1: form.password1.value,
         };
-        console.log(data);
 
-        const response = await fetch("/auth/reg", {
+        const response = await fetch("/auth/login", {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
         });
-
         if (response.ok) {
           const result = await response.json();
           console.log(result.message);
-
-          if (result.success) {
-            window.location.href = "/confirm.html";
-          }
+          window.location.href = "/dashboard";
         } else {
           const errorData = await response.json();
           console.log(errorData.message);
