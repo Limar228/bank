@@ -36,7 +36,7 @@
 
       <div class="actions-grid">
         <button class="btn-action" id="replenish">Пополнить</button>
-        <button class="btn-action">Перевести</button>
+        <button class="btn-action" id="transfer">Перевести</button>
       </div>
 
       <div class="product-list" id="accountList">
@@ -176,6 +176,11 @@
         .getElementById("replenish")
         .addEventListener("click", async () => {
           window.location.href = "/replenish";
+        });
+      document
+        .getElementById("transfer")
+        .addEventListener("click", async () => {
+          window.location.href = "/transfer";
         });
     </script>
   </body>

@@ -19,6 +19,7 @@ const transport = {
       console.log("Отправляем письмо на " + mailOptions.to);
 
       const info = await transporter.sendMail(mailOptions);
+      console.log(verification);
 
       console.log("Письмо с кодом успешно отправлено на " + params);
     } catch (error) {

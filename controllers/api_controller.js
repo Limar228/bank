@@ -40,7 +40,11 @@ const users = {
     res.status(200).json({ message: "allgood", dataCards: dataCards });
   },
   async createCards(req, res) {
-    const dataCards = await usersCards.createCards(req.body, req.user.id_user);
+    await usersCards.createCards(req.body, req.user.id_user);
+    res.status(200).json({ message: "ok" });
+  },
+  async transfer(req, res) {
+    await usersAccounts.transfer(req.body, req.user.id_user);
     res.status(200).json({ message: "ok" });
   },
 };

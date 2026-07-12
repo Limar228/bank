@@ -33,13 +33,21 @@
 -- -- Шаг 2: Сдвигаем счетчик на актуальный максимум
 -- SELECT setval('cards_id_seq', (SELECT MAX(id) FROM cards));
 
-SELECT 
-    a.id,
-    c.name,
-    c.type,
-    c.number,
-    a.balance
-    FROM accounts a
-    INNER JOIN cards c ON a.card_id = c.id
-    WHERE c.user_id = 1
+-- SELECT 
+--     a.id,
+--     c.name,
+--     c.type,
+--     c.number,
+--     a.balance
+--     FROM accounts a
+--     INNER JOIN cards c ON a.card_id = c.id
+--     WHERE c.user_id = 1
     
+UPDATE accounts 
+    SET balance = balance - 22
+    FROM cards 
+    WHERE accounts.card_id = cards.id
+      AND cards.number = '3333 3333 3333 4321'
+      AND cards.user_id = 1
+      RETURNING
+    22 AS transferred_amount;

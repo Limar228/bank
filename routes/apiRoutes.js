@@ -9,6 +9,7 @@ router.get("/user/dashboard", refreshToken, auth, api.getUserData);
 router.post("/user/replenish", refreshToken, auth, api.updateUser);
 router.get("/cards", refreshToken, auth, api.getCards);
 router.post("/cards/newCards", refreshToken, auth, api.createCards);
+router.post("/transfer", refreshToken, auth, api.transfer);
 // router.post("/loggout", api.loggout);
 
 module.exports = router;

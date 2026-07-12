@@ -32,6 +32,9 @@ const pageController = {
   async newCards(req, res) {
     res.sendFile(path.join(__dirname, "..", "views", "newCards.html"));
   },
+  async transfer(req, res) {
+    res.sendFile(path.join(__dirname, "..", "views", "transfer.html"));
+  },
 };
 
 module.exports = pageController;

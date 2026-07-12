@@ -7,6 +7,9 @@ const accounts = {
       id_user,
     );
   },
+  async transfer(data, id_user) {
+    const valueOfBase = await accountsRepository.transfer(data, id_user);
+  },
 };
 
 module.exports = accounts;

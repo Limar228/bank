@@ -11,5 +11,6 @@ router.get("/dashboard", refreshToken, auth, controller.dashboard);
 router.get("/replenish", refreshToken, auth, controller.replenish);
 router.get("/cards", refreshToken, auth, controller.cards);
 router.get("/newCards", refreshToken, auth, controller.newCards);
+router.get("/transfer", refreshToken, auth, controller.transfer);
 
 module.exports = router;

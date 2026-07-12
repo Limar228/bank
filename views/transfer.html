@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Перевод денег</title>
+    <link rel="stylesheet" href="/styles/dashboard_styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Перевод</h1>
+      <p>Перевод между пользователями</p>
+
+      <div class="balance-section">
+        <div class="balance-label">Доступно</div>
+        <div class="balance-amount" id="balance">0</div>
+      </div>
+
+      <div class="error-message" id="error"></div>
+      <form id="transfer-form">
+        <div class="product-list">
+          <div class="product-item">
+            <div class="product-info">
+              <div class="product-name">Получатель</div>
+              <div class="product-sub">Номер карты получателя</div>
+            </div>
+          </div>
+
+          <input
+            type="text"
+            id="recipient"
+            placeholder="0000 0000 0000 0000"
+            maxlength="19"
+            inputmode="numeric"
+            style="
+              width: 100%;
+              padding: 12px;
+              border: 1px solid #ddd;
+              border-radius: 12px;
+              margin-bottom: 15px;
+              box-sizing: border-box;
+              font-size: 14px;
+            "
+          />
+
+          <div class="product-name">Счет списания</div>
+
+          <input
+            type="text"
+            id="my-card"
+            placeholder="0000 0000 0000 0000"
+            maxlength="19"
+            inputmode="numeric"
+            style="
+              width: 100%;
+              padding: 12px;
+              border: 1px solid #ddd;
+              border-radius: 12px;
+              margin-bottom: 15px;
+              box-sizing: border-box;
+              font-size: 14px;
+            "
+          />
+
+          <div class="product-item">
+            <div class="product-info">
+              <div class="product-name">Сумма</div>
+              <div class="product-sub">Введите сумму перевода</div>
+            </div>
+          </div>
+
+          <input
+            type="number"
+            id="amount"
+            placeholder="0 ₽"
+            min="1"
+            style="
+              width: 100%;
+              padding: 12px;
+              border: 1px solid #ddd;
+              border-radius: 12px;
+              margin-bottom: 15px;
+              box-sizing: border-box;
+              font-size: 14px;
+            "
+          />
+        </div>
+
+        <button type="submit" class="btn-main">Перевести</button>
+      </form>
+    </div>
+
+    <script>
+      function formatCardNumber(e) {
+        let value = e.target.value.replace(/\D/g, "");
+        let formatted = "";
+
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formatted += " ";
+          }
+          formatted += value[i];
+        }
+
+        e.target.value = formatted;
+      }
+
+      document
+        .getElementById("recipient")
+        .addEventListener("input", formatCardNumber);
+      document
+        .getElementById("my-card")
+        .addEventListener("input", formatCardNumber);
+
+      document.addEventListener("DOMContentLoaded", async (e) => {
+        e.preventDefault();
+
+        try {
+          //ВСЕГО НА СЧЕТАХ ИЗ ГЛАВНОЙ DRY
+          const response = await fetch("/api/user/dashboard", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          const data = await response.json();
+
+          document.getElementById("balance").textContent =
+            `${Math.round(data.users.balance)} ${data.users.currency}`;
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
+      const form = document.getElementById("transfer-form");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const error = document.getElementById("error");
+        const recipient = document.getElementById("recipient").value.trim();
+        const amount = Number(document.getElementById("amount").value);
+        const myCards = document.getElementById("my-card").value.trim();
+
+        const balance = document.getElementById("balance");
+        const balanceParse = parseInt(balance.textContent);
+
+        error.style.display = "none";
+        error.textContent = "";
+
+        if (balanceParse < amount) {
+          error.textContent = "Недостаточно на вашем счету";
+          error.style.display = "block";
+          return;
+        }
+
+        const data = {
+          recipient: recipient,
+          amount: amount,
+          myCards: myCards,
+        };
+
+        try {
+          const response = await fetch("api/transfer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (response.ok) {
+            window.location.href = "/transfer";
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    </script>
+  </body>
+</html>
