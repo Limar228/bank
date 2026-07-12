@@ -19,12 +19,8 @@
       </div>
 
       <div class="actions-grid">
-        <button class="btn-action" onclick="alert('Кнопка: Пополнить')">
-          Пополнить
-        </button>
-        <button class="btn-action" onclick="alert('Кнопка: Платежи')">
-          Платежи
-        </button>
+        <button class="btn-action" id="newCards">Создать карту</button>
+        <button class="btn-action" id="cards">Карты</button>
       </div>
 
       <div class="product-list" id="accounts-container"></div>
@@ -46,7 +42,8 @@
         if (errorBlock) errorBlock.style.display = "none";
       }
 
-      document.addEventListener("DOMContentLoaded", async () => {
+      document.addEventListener("DOMContentLoaded", async (e) => {
+        e.preventDefault();
         hideError();
 
         try {
@@ -54,33 +51,10 @@
             method: "GET",
             headers: { "Content-Type": "application/json" },
           });
-
-          if (response.status === 401) {
-            const refreshResponse = await fetch("/api/refresh", {
-              method: "POST",
-            });
-            if (refreshResponse.ok) {
-              window.location.href = "/dashboard";
-            } else {
-              window.location.href = "/login?error=session_expired";
-              const data = await refreshResponse.json();
-            }
-          }
-
-          const data = await response.json().catch(() => null);
-
-          if (!response.ok || (data && data.success === false)) {
-            const errorMsg =
-              data?.message || `Ошибка сервера (Статус: ${response.status})`;
-            showError(errorMsg);
-            return;
-          }
+          const data = await response.json();
           renderDashboard(data.users);
         } catch (error) {
-          console.error("Ошибка:", error);
-          showError(
-            "Не удалось связаться с сервером. Проверьте интернет-соединение.",
-          );
+          showError(error.message);
         }
       });
 
@@ -97,19 +71,16 @@
       document
         .getElementById("logout-btn")
         .addEventListener("click", async () => {
-          try {
-            const logoutResponse = await fetch("/api/loggout", {
-              method: "POST",
-            });
-            const data = await logoutResponse.json().catch(() => ({}));
-
-            if (logoutResponse.ok || data.success) {
-              window.location.href = "/login";
-            }
-          } catch (err) {
-            showError("Ошибка сети при попытке выхода.");
-          }
+          window.location.href = "/login";
         });
+      document
+        .getElementById("newCards")
+        .addEventListener("click", async () => {
+          window.location.href = "/newCards";
+        });
+      document.getElementById("cards").addEventListener("click", async () => {
+        window.location.href = "/cards";
+      });
     </script>
   </body>
 </html>

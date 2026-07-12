@@ -1,29 +1,49 @@
 const jwt = require("jsonwebtoken");
 
-function authMiddleware(req, res, next) {
-  const token = req.cookies.accessToken;
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Токен отсутствует. Войдите в систему." });
-  }
+async function authMiddleware(req, res, next) {
+  const accessToken = req.cookies.accessToken;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_PUBLIC_KEY);
+    const decoded = jwt.verify(accessToken, process.env.JWT_PUBLIC_KEY, {
+      algorithms: ["RS256"],
+    });
 
     req.user = decoded;
+    console.log("auth");
 
-    next();
+    return next();
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({
-        code: "TOKEN_EXPIRED",
-        message: "Время действия токена истекло. Обновите токен.",
-      });
+    const isApiRequest =
+      req.originalUrl.startsWith("/api") ||
+      req.headers.accept?.includes("application/json");
+
+    console.error(error);
+
+    if (
+      error.name === "JsonWebTokenError" ||
+      error.name === "TokenExpiredError"
+    ) {
+      if (error.message === "jwt must be provided") {
+        console.log("Токена нет!");
+      }
+      if (error.message === "invalid token") {
+        console.log("Внимание! Кто-то пытается подделать токен!");
+      }
+
+      if (isApiRequest) {
+        return res
+          .status(401)
+          .json({ code: "TOKEN_EXPIRED", message: "Сессия истекла." });
+      } else {
+        return res.redirect("/login?error=session_expired");
+      }
     }
 
-    return res.status(403).json({ message: "Невалидный токен." });
+    if (isApiRequest) {
+      return res.status(403).json({ message: "Доступ запрещен." });
+    } else {
+      return res.redirect("/login?error=unknown");
+    }
   }
 }
 

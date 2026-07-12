@@ -4,3 +4,4 @@ CREATE TABLE pis_sessions (
     refresh TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 ); - ВСЕ ТОКЕНЫ ВЫДЕЛИТЬ В ДР ТБ ТАК ЛУЧШЕ
+API Gateway (Шлюз API)

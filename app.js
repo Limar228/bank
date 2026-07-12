@@ -12,9 +12,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/", html_routes);
 app.use("/auth", reg_routes);
 app.use("/api", apiRoutes);
+app.use("/", html_routes);
 
 app.use(express.static("public"));
 

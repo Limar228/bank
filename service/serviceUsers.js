@@ -5,16 +5,10 @@ const transport = require("./serviceTransportMaill");
 const confirm = require("./serviceConfirm");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-// const { error } = require("console");
-
-// const { loginUsers } = require("../controllers/login_controller");
 
 const users = {
-  async getUsers(token) {
-    const decoded = jwt.verify(token, process.env.JWT_PUBLIC_KEY, {
-      algorithms: ["RS256"],
-    });
-    const userFromBD = await userRepository.getData(decoded);
+  async getUsers(user) {
+    const userFromBD = await userRepository.getData(user);
     return userFromBD;
   },
   async writeUsers(data) {
@@ -43,18 +37,5 @@ const users = {
       },
     };
   },
-  // async updateToken(token) {
-  //   try {
-  //     await userRepository.updateToken(token);
-  //     return {
-  //       success: true,
-  //     };
-  //   } catch (error) {
-  //     return {
-  //       success: false,
-  //       message: error,
-  //     };
-  //   }
-  // },
 };
 module.exports = users;

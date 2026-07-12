@@ -1,0 +1,7 @@
+CREATE TABLE cards(
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    number VARCHAR(20) NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id_user) ON DELETE CASCADE
+);

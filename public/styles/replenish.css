@@ -1,0 +1,105 @@
+/* Адаптированная форма под новый минималистичный стиль */
+
+.replenish-form {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 20px; /* Увеличено скругление под стиль container */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Мягкая тень */
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 13px; /* Чуть уменьшили размер */
+  color: gray; /* Перешли на серый, как у balance-label */
+  text-transform: uppercase; /* Добавили строгости */
+  letter-spacing: 0.5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 14px; /* Сделали поле чуть просторнее */
+  background: #fafafa; /* Светлый фон вместо белого, как у balance-section */
+  border: 1px solid #eee;
+  border-radius: 12px; /* Мягкое скругление, как у кнопок действий */
+  font-size: 15px;
+  color: black;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #ccc; /* Мягкий фокус без яркого синего цвета */
+  background: #ffffff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Стилизация сообщений об ошибках и успехе в общей концепции */
+.error-message {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  padding: 12px 15px;
+  border-radius: 12px; /* Закруглили углы */
+  margin-bottom: 15px;
+  display: none;
+  font-size: 13px;
+}
+
+.success-message {
+  color: #52c41a;
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
+  padding: 12px 15px;
+  border-radius: 12px; /* Закруглили углы */
+  margin-bottom: 15px;
+  display: none;
+  font-size: 13px;
+}
+
+/* Главная кнопка отправки формы (в стиле btn-main) */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: black; /* Синий заменен на черный акцент */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.btn-submit:hover {
+  opacity: 0.8; /* Эффект при наведении как у btn-main */
+}
+
+.btn-back {
+  display: block;
+  width: 100%;
+  padding: 14px 0;
+
+  background: #f3f4f6; /* Делаем её видимой серой кнопкой */
+  color: black;
+  border: none;
+  border-radius: 12px; /* Закругляем под общий стиль */
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-back:hover {
+  background: #e5e7eb; /* Потемнение при наведении */
+}

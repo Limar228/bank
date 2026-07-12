@@ -51,4 +51,4 @@
 -- (4, 3, 102, '2026-05-10', 1),
 -- (5, 4, 101, '2026-05-12', 1),
 -- (6, 2, 104, '2026-05-15', 1);
-INSERT INTO accounts (balance, currency, user_id) VALUES(1 , 'UA', 3)
+INSERT INTO cards (name, type, number, account_id) VALUES('СБЕРБАНК' , 'card', '3333 3333 3333 4321', 3)

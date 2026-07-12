@@ -15,13 +15,17 @@ const userRepository = {
       verificationCode,
     ]);
   },
-  async getData(token) {
+  async getData(user) {
     const query = `
-       SELECT username, balance, currency
-       FROM users u
-       LEFT JOIN accounts a ON u.id_user = a.user_id
+       SELECT username, SUM(balance) as balance, currency
+FROM cards
+LEFT JOIN accounts ON accounts.card_id = cards.id
+LEFT JOIN users ON users.id_user = cards.user_id
+WHERE users.id_user = $1
+GROUP BY users.username, accounts.currency;
     `;
-    const result = await pool.query(query);
+    const result = await pool.query(query, [user.id_user]);
+
     if (!result.rows.length) {
       return null;
     }

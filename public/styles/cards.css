@@ -1,0 +1,295 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 25px;
+  width: 100%;
+  max-width: 350px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  overflow: hidden; /* Чтобы карты не вылезали за границы контейнера при анимации */
+}
+
+h1 {
+  text-align: left;
+  margin: 0 0 5px 0;
+  font-size: 22px;
+}
+
+p {
+  text-align: left;
+  color: gray;
+  margin: 0 0 20px 0;
+  font-size: 14px;
+}
+
+/* --- Анимированная Карусель Карт --- */
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px; /* Глубина для 3D эффектов */
+}
+
+.cards-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bank-card {
+  position: absolute;
+  width: 220px;
+  height: 135px;
+  border-radius: 16px;
+  padding: 15px;
+  box-sizing: border-box;
+  color: white;
+  background: linear-gradient(135deg, #2c3e50, #0f2027);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease,
+    z-index 0.4s;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transform: translateX(0) scale(0.7);
+}
+
+/* Стили для разных типов карт (кастомизация по вкусу) */
+.bank-card.black {
+  background: linear-gradient(135deg, #111, #333);
+}
+.bank-card.platinum {
+  background: linear-gradient(135deg, #616161, #9bc5c3);
+}
+.bank-card.gold {
+  background: linear-gradient(135deg, #b38728, #fbf5b7);
+  color: #222;
+}
+
+/* Активная карта по центру */
+.bank-card.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 3;
+  transform: translateX(0) scale(1);
+}
+
+/* Фоновая карта слева */
+.bank-card.prev {
+  opacity: 0.4;
+  z-index: 1;
+  transform: translateX(-110px) scale(0.8) rotateY(15deg);
+}
+
+/* Фоновая карта справа */
+.bank-card.next {
+  opacity: 0.4;
+  z-index: 1;
+  transform: translateX(110px) scale(0.8) rotateY(-15deg);
+}
+
+/* Элементы внутри карты */
+.card-chip {
+  width: 25px;
+  height: 20px;
+  background: #e5a93b;
+  border-radius: 4px;
+}
+.card-balance {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  opacity: 0.8;
+  font-family: "Courier New", monospace;
+}
+
+/* Стрелочки навигации */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #eee;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition:
+    background 0.2s,
+    opacity 0.2s;
+}
+.nav-btn:hover {
+  background: #e5e7eb;
+}
+.nav-btn.left {
+  left: -5px;
+}
+.nav-btn.right {
+  right: -5px;
+}
+.nav-btn:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Стилизация общего баланса --- */
+.balance-section {
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+}
+
+.balance-label {
+  font-size: 12px;
+  color: gray;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.balance-amount {
+  font-size: 26px;
+  font-weight: bold;
+  color: black;
+}
+
+/* Сетка быстрых действий */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 12px;
+  background: #f3f4f6;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.btn-action:hover {
+  background: #e5e7eb;
+}
+
+/* Список продуктов (счета из БД) */
+.product-list {
+  margin-bottom: 20px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.product-item:last-child {
+  border-bottom: none;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.product-sub {
+  font-size: 12px;
+  color: gray;
+  margin-top: 2px;
+}
+
+.product-value {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Главная акцентная кнопка */
+.btn-main {
+  width: 100%;
+  padding: 14px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 10px;
+  transition: opacity 0.2s;
+}
+
+.btn-main:hover {
+  opacity: 0.8;
+}
+
+.error-message {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  display: none;
+  font-size: 14px;
+}
+
+/* Скелетон загрузки */
+.loading-placeholder {
+  text-align: center;
+  color: gray;
+  font-size: 14px;
+  padding: 20px 0;
+}

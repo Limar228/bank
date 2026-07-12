@@ -23,6 +23,15 @@ const pageController = {
   async dashboard(req, res) {
     res.sendFile(path.join(__dirname, "..", "views", "dashboard.html"));
   },
+  async replenish(req, res) {
+    res.sendFile(path.join(__dirname, "..", "views", "replenish.html"));
+  },
+  async cards(req, res) {
+    res.sendFile(path.join(__dirname, "..", "views", "cards.html"));
+  },
+  async newCards(req, res) {
+    res.sendFile(path.join(__dirname, "..", "views", "newCards.html"));
+  },
 };
 
 module.exports = pageController;

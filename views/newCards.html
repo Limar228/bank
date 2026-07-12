@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Создание новой карты</title>
+    <link rel="stylesheet" href="/styles/newCards.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Новая карта</h1>
+      <p>Выберите тип карты</p>
+
+      <div class="carousel-wrapper">
+        <button class="nav-btn left" id="prevBtn">&lt;</button>
+
+        <div class="cards-slider">
+          <div class="bank-card black active" data-type="debit">
+            <div class="card-chip"></div>
+            <div class="card-balance">
+              <span class="preview-currency">₽</span>
+              <span class="preview-amount">0</span>
+            </div>
+            <div class="card-footer">
+              <span class="preview-holder">debit</span>
+              <span>12/31</span>
+            </div>
+          </div>
+
+          <div class="bank-card gold next" data-type="credit">
+            <div class="card-chip"></div>
+            <div class="card-balance">
+              <span class="preview-currency">₽</span>
+              <span class="preview-amount">0</span>
+            </div>
+            <div class="card-footer">
+              <span class="preview-holder">credit</span>
+              <span>12/31</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="nav-btn right" id="nextBtn">&gt;</button>
+      </div>
+
+      <button class="btn-main" id="createBtn">Выпустить карту</button>
+
+      <div id="loaderOverlay" class="overlay hidden">
+        <div class="spinner">Загрузка...</div>
+      </div>
+
+      <div class="error-message" id="errorBlock">
+        Пожалуйста, заполните все поля корректно.
+      </div>
+    </div>
+
+    <script>
+      const cards = document.querySelectorAll(".bank-card");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      let currentIdx = 0;
+
+      function updateCarousel() {
+        cards.forEach((card, idx) => {
+          card.classList.remove("active", "prev", "next");
+
+          if (idx === currentIdx) {
+            card.classList.add("active");
+          } else if (idx === (currentIdx - 1 + cards.length) % cards.length) {
+            card.classList.add("prev");
+          } else if (idx === (currentIdx + 1) % cards.length) {
+            card.classList.add("next");
+          }
+        });
+      }
+
+      prevBtn.addEventListener("click", () => {
+        currentIdx = (currentIdx - 1 + cards.length) % cards.length;
+        updateCarousel();
+      });
+
+      nextBtn.addEventListener("click", () => {
+        currentIdx = (currentIdx + 1) % cards.length;
+        updateCarousel();
+      });
+
+      const previewHolders = document.querySelectorAll(".preview-holder");
+      const previewAmounts = document.querySelectorAll(".preview-amount");
+
+      const createBtn = document.getElementById("createBtn");
+      const errorBlock = document.getElementById("errorBlock");
+      const overlay = document.getElementById("loaderOverlay");
+
+      createBtn.addEventListener("click", async () => {
+        createBtn.disabled = true;
+        overlay.classList.remove("hidden");
+        try {
+          const activeCard = document.querySelector(".bank-card.active");
+          const cardType = activeCard.getAttribute("data-type");
+
+          const value = {
+            type: cardType,
+          };
+
+          const response = await fetch("/api/cards/newCards", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(value),
+          });
+
+          if (response.ok) {
+            overlay.classList.add("hidden");
+            createBtn.disabled = false;
+          } else {
+            console.error("Ошибка сервера при создании карты");
+            overlay.classList.add("hidden");
+            createBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error("Ошибка сети:", err);
+          overlay.classList.add("hidden");
+          createBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

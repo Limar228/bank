@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Next Bank — Мои Карты и Счета</title>
+    <link rel="stylesheet" href="/styles/cards.css" />
+    <link rel="stylesheet" href="/styles/replenish.css" />
+  </head>
+  <body>
+    <div class="container">
+      <button class="btn-back" id="btn-dashboard">На главную</button>
+      <h1>Кошелёк</h1>
+      <p>Управление картами и счетами</p>
+
+      <div id="errorBox" class="error-message"></div>
+
+      <div class="carousel-wrapper">
+        <button class="nav-btn left" id="prevBtn" onclick="moveSlide(-1)">
+          &lsaquo;
+        </button>
+
+        <div class="cards-slider" id="cardsContainer">
+          <div class="loading-placeholder">Загрузка карт...</div>
+        </div>
+
+        <button class="nav-btn right" id="nextBtn" onclick="moveSlide(1)">
+          &rsaquo;
+        </button>
+      </div>
+
+      <div class="balance-section">
+        <div class="balance-label">Общий баланс</div>
+        <div class="balance-amount" id="totalBalance">0.00 ₽</div>
+      </div>
+
+      <div class="actions-grid">
+        <button class="btn-action" id="replenish">Пополнить</button>
+        <button class="btn-action">Перевести</button>
+      </div>
+
+      <div class="product-list" id="accountList">
+        <div class="loading-placeholder">Загрузка счетов...</div>
+      </div>
+
+      <button class="btn-main">История операций</button>
+    </div>
+
+    <script>
+      document
+        .getElementById("btn-dashboard")
+        .addEventListener("click", async () => {
+          window.location.href = "/dashboard";
+        });
+
+      let currentIndex = 0;
+      let accountsData = [];
+
+      function formatCurrency(value) {
+        return new Intl.NumberFormat("ru-RU", {
+          style: "currency",
+          currency: "RUB",
+        }).format(value);
+      }
+
+      function updateCarousel() {
+        const cards = document.querySelectorAll(".bank-card");
+        if (cards.length === 0) return;
+
+        cards.forEach((card, index) => {
+          card.className = "bank-card";
+
+          if (index % 3 === 1) card.classList.add("platinum");
+          else if (index % 3 === 2) card.classList.add("gold");
+          else card.classList.add("black");
+
+          if (index === currentIndex) {
+            card.classList.add("active");
+          } else if (index === currentIndex - 1) {
+            card.classList.add("prev");
+          } else if (index === currentIndex + 1) {
+            card.classList.add("next");
+          }
+        });
+
+        document.getElementById("prevBtn").disabled = currentIndex === 0;
+        document.getElementById("nextBtn").disabled =
+          currentIndex === cards.length - 1;
+      }
+
+      function moveSlide(direction) {
+        currentIndex += direction;
+        updateCarousel();
+      }
+
+      async function fetchAccountsData() {
+        try {
+          const response = await fetch("/api/cards");
+
+          const data = await response.json();
+          if (!response.ok) {
+            window.location.href = "/login?error=session_expired";
+            return;
+          }
+          accountsData = data.dataCards;
+
+          renderData(accountsData);
+        } catch (error) {
+          console.error(error);
+          showError("Ошибка получения данных. ");
+        }
+      }
+
+      function renderData(data) {
+        const cardsContainer = document.getElementById("cardsContainer");
+        const accountList = document.getElementById("accountList");
+        const totalBalanceEl = document.getElementById("totalBalance");
+
+        cardsContainer.innerHTML = "";
+        accountList.innerHTML = "";
+
+        let totalSum = 0;
+        let cardCount = 0;
+
+        data.forEach((item) => {
+          totalSum += Number(item.balance);
+
+          if (item.type === "debit") {
+            cardCount++;
+            const cardHtml = `
+            <div class="bank-card">
+              <div class="card-chip"></div>
+              <div class="card-balance">${formatCurrency(item.balance)}</div>
+              <div class="card-footer">
+                <span>${item.name}</span>
+                <span>${item.number}</span>
+              </div>
+            </div>
+          `;
+            cardsContainer.insertAdjacentHTML("beforeend", cardHtml);
+          }
+
+          const productHtml = `
+          <div class="product-item">
+            <div class="product-info">
+              <span class="product-name">${item.name}</span>
+              <span class="product-sub">${item.number}</span>
+            </div>
+            <span class="product-value">${formatCurrency(item.balance)}</span>
+          </div>
+        `;
+          accountList.insertAdjacentHTML("beforeend", productHtml);
+        });
+
+        if (cardCount === 0) {
+          cardsContainer.innerHTML =
+            '<div class="loading-placeholder">Нет активных карт</div>';
+        }
+
+        totalBalanceEl.innerText = formatCurrency(totalSum);
+        currentIndex = 0;
+        updateCarousel();
+      }
+
+      function showError(msg) {
+        const errorBox = document.getElementById("errorBox");
+        errorBox.innerText = msg;
+        errorBox.style.display = "block";
+        setTimeout(() => {
+          errorBox.style.display = "none";
+        }, 5000);
+      }
+
+      window.onload = fetchAccountsData;
+      document
+        .getElementById("replenish")
+        .addEventListener("click", async () => {
+          window.location.href = "/replenish";
+        });
+    </script>
+  </body>
+</html>

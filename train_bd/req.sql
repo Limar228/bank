@@ -15,9 +15,31 @@
 
 -- Вы не сможете случайно удалить клиента из таблицы customers, если у него есть хотя бы один заказ в таблице orders (чтобы заказы не остались «сиротами» без автора).
 
-SELECT first_name, last_name, SUM(quantity * price)
-FROM customers
-LEFT JOIN orders ON customers.customer_id = orders.customer_id
-LEFT JOIN products ON orders.product_id = products.product_id
-GROUP BY first_name, last_name
-HAVING first_name LIKE '%а%'
+
+-- SELECT 
+--     a.id AS account_id,
+--     a.balance AS account_balance,
+--     a.currency,
+--     c.name AS card_name,
+--     c.number AS card_number,
+--     a.balance AS card_balance
+-- FROM accounts a
+-- INNER JOIN cards c ON a.id = c.account_id
+-- WHERE a.user_id = 1
+-- DELETE FROM cards WHERE id = (SELECT MAX(id) FROM cards);
+-- INSERT INTO accounts (balance, currency, card_id) VALUES ('0', 'RUB', '1')
+-- DELETE FROM cards WHERE id = (SELECT MAX(id) FROM cards);
+
+-- -- Шаг 2: Сдвигаем счетчик на актуальный максимум
+-- SELECT setval('cards_id_seq', (SELECT MAX(id) FROM cards));
+
+SELECT 
+    a.id,
+    c.name,
+    c.type,
+    c.number,
+    a.balance
+    FROM accounts a
+    INNER JOIN cards c ON a.card_id = c.id
+    WHERE c.user_id = 1
+    
